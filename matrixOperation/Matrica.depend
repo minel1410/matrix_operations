@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1673975931 source:c:\users\minel\desktop\matrica\matrica.cpp
+	"Matrica.h"
+
+1673975847 c:\users\minel\desktop\matrica\matrica.h
+	<iostream>
+	<vector>
+	<cmath>
+	<stack>
+	<iomanip>
+
+1673971160 source:c:\users\minel\desktop\matrica\main.cpp
+	"Matrica.h"
+	<cstdlib>
+	<ctime>
+
