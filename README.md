@@ -1,4 +1,4 @@
-Projekat – tema 3
+Matrix operations
 Minel Salihagić
 
 Tema projekta je implementacija klase Matrica koja čuva matricu proizvoljnih dimenzija. 
