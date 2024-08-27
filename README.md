@@ -1,84 +1,24 @@
-Matrix operations
-Minel Salihagić
+# Matrix Operations
 
-Tema projekta je implementacija klase Matrica koja čuva matricu proizvoljnih dimenzija. 
-Naglasak je bio na brzom množenju matrice, determinanti i operatoru '>>'.
-S obzirom da nije naglašeno da li klasa treba biti generička, ja sam se odlučio za implementaciju 
-matrice preko vektora vektora, koji čuvaju doubleove. Pošto je u pitanju double podržana je i 
-automatska konverzija iz inta u double. Ono što je bitno naglasiti je da klasa sadrži član 'skalar' 
-koji čuva informaciju o tome da li je matrica stvarno matrica ili je broj predstavljen u obliku 
-matrice, što je bilo potrebno za implementaciju operatora '>>', koji je i evaluator izraza sa 
-matricama.
+**Minel Salihagić**
 
-Postoji i par pomoćnih privatnih funkcija koji služe za lakše implementiranje ostalih funkcija. 
-Većina imena funkcija kao i njihova implementacija su jednostavne pa ih neću detaljnije
-pojašnjavati ovdje, kratko objašnjenje je dato u komentarima za svaku funkciju. 
-Funkcija 'Strassen' koja prima dvije matrice i vraća matricu je funkcija koja vrši množenje dvije 
-matrice u vremenu 𝑂(𝑛
-2,81) što je malo brže u odnosu na standardni algoritam za množenje 
-𝑂(𝑛
-3
-). 
-Funkcija je implementirana metodom „podijeli pa vladaj“ kao što je traženo u zadatku. 
-Radi tako što podjeli matrice na po 4 bloka, te svaki blok množi zasebno. Ako je blok veći od 2x2, 
-što je i bazni slučaj, matrica se rekurzivno poziva na te blokove. Nakon završetka algoritma, 
-rezultat su 4 matrice, koje su podmatrice rezultujuće. Potrebno je samo spojiti ih u jednu. S 
-obzirom da Strassenov algoritam radi samo za kvadratne matrice, čija je dužina stepen broja 2, 
-potrebno je dodati određen broj 0-kolona i redova da bi dobili takve matrice. Za to služe funkcije 
-'dodajRedNaKraj ()' i ostale. Funkcija 'obrisiVisak ()' miče redove i kolone koji su višak nakon 
-množenja. Funkcija 'ispraviNule ()' služi za zaokruživanje veoma malih brojeva na 0 koji nastaju 
-zbog floating point aritmetike prilikom množenja. 
-Sve funkcije su implementirane na način da rade i sa konstantnim i nekonstantim matricama, 
-odnosno da rade bez promjene podataka.
+The project theme is the implementation of a `Matrix` class that stores a matrix of arbitrary dimensions. The focus was on efficient matrix multiplication, determinant calculation, and the `>>` operator. Since it wasn't specified whether the class should be generic, I chose to implement the matrix using a vector of vectors, which stores `double` values. As `double` is used, automatic conversion from `int` to `double` is supported. An important aspect to highlight is the class member `scalar`, which indicates whether the matrix is truly a matrix or a number represented in matrix form, necessary for implementing the `>>` operator, which acts as an evaluator of expressions with matrices.
 
-Što se tiče konstruktora, postoji konstruktor bez parametara, konstruktor sa 2 parametra koji 
-pravi jediničnu matricu proslijeđenih dimenzija te baca izuzetak ukoliko je parametar negativan 
-ili nula, konstruktor kopije koji prima skalar, te ga čuva kao matricu. Zatim konstruktor koji prima 
-matricu te dva parametra, i vraća istu tu matricu bez reda i kolone koji su proslijeđeni. Služi kod 
-računanja determinante. Pored toga implementirano je „The Big Five“, te također operator 
-dodjele za skalarne matrice.
+A few auxiliary private functions are included to simplify the implementation of other functions. Most function names and their implementations are straightforward, so I won't go into detail here; brief explanations are provided in the comments for each function. The `Strassen` function, which takes two matrices and returns a matrix, performs multiplication in 𝑂(𝑛^2.81) time, which is slightly faster than the standard multiplication algorithm (𝑂(𝑛^3)). The function is implemented using the "divide and conquer" method, as required by the task. It works by dividing the matrices into 4 blocks, then multiplying each block separately. If a block is larger than 2x2, which is the base case, the matrix is recursively divided into blocks. After completing the algorithm, the result is 4 matrices, which are the submatrices of the result. These submatrices need to be merged into one. Since Strassen's algorithm only works for square matrices with dimensions that are powers of 2, some 0-columns and rows need to be added to achieve such matrices. Functions like `addRowToEnd()` serve this purpose. The `removeExcess()` function removes the rows and columns that are unnecessary after multiplication. The `correctZeros()` function rounds off very small numbers to 0 that arise due to floating point arithmetic during multiplication. All functions are implemented to work with both constant and non-constant matrices, without altering the data.
 
-Funkcija 'Inverzna ()' vraća matricu koja je inverz proslijeđene matrice. Prvo provjeri da li je 
-matrica invertibilna računajući determinantu, te ako nije baca izuzetak. Radi po formuli:
-𝐴
-−1 =
-1
-𝑑𝑒𝑡𝐴 ∙ 𝑎𝑑𝑗𝐴
-gdje je 𝑎𝑑𝑗𝐴 transponovana matrica algebarskih komplemenata, odnosno matrica čiji je svaki 
-element jednak vrijednosti determinante matrice bez kolone i reda u kojoj se nalazi taj element.
-Funkcija radi u 𝑂(𝑛
-3
-) za n x n matricu.
-Funkcija za računanje determinante je implementirana da radi Gausovom metodom sa 
-pivotiranjem, gdje se matrica svodi na gornju trougaonu te radi u vremenu 𝑂(𝑛
-3
-).
+Regarding constructors, there is a parameterless constructor, a constructor with 2 parameters that creates an identity matrix of the specified dimensions (throwing an exception if the parameters are negative or zero), a copy constructor that takes a scalar and stores it as a matrix, and a constructor that takes a matrix and two parameters, returning the matrix without the specified row and column. This is useful for determinant calculation. Additionally, "The Big Five" are implemented, as well as an assignment operator for scalar matrices.
 
-S obzirom da je potrebna provjera da li je skalar true ili false u nekim funkcijama koje nisu 
-deklarisane kao prijatelji klase, napravljen je geter za skalar. 
-Implementirani su i operatori „ ==, !=, +=, -=, *=, /=, +, -, *, /, ^“ koji rade i za slučajeve kada je 
-jedna od proslijeđenih matrica skalar. Operator '^' radi po algoritmu brzog stepenovanja. Ako je 
-eskponent manji od nula, matrica se prvo invertuje, a eksponent se množi sa -1 te se poziva 
-operator, sada na invertovanu matricu i pozitivan eksponent. Ako je eksponent 0, vraća se 
-jedinična matrica, a ako je veći od nula posmatra se binarni zapis eksponenta, odnosno rezultat 
-pri dijeljenju sa 2. Ako je broj djeljiv sa 2, odnosno ako je u binarnom zapisu cifra 2, matrica se 
-množi baznom matricom, odnosno onom matricom koja je proslijeđena te se eksponent podijeli 
-sa 2, i tako sve dok je eksponent veći od 0. 
+The `Inverse()` function returns the inverse of the provided matrix. It first checks if the matrix is invertible by calculating the determinant; if not, it throws an exception. The function operates using the formula:
 
-Osim toga podržani su i operatori za ispis i upis matrica. Zadnja funkcija je 'uzmiMatricu ()' koja 
-je pomoćna funkcija kod operatora '>>', koja služi za izdvajanje samo matrice iz ulaznog toka, 
-kada naiđe na '['. Ovdje je bitno napomenuti da se kod unošenja izraza podrazumijeva da znak '[' 
-označava početak unosa matrice, te će javiti grešku ako matrica nije unesena u ispravnom 
-formatu.
+`A^(-1) = (1/detA) * adjA`
 
-Operator '>>' radi po „shunting yard“ algoritmu, na sličan način na koji je implementiran i 
-evaluator na vježbama, te su implementirane pomoćne funkcije koje olakšavaju implementaciju 
-operatora. 
-U main funkciji su napravljene funkcije koje služe za generisanje random intova i doubleova, te
-jedna funkcija koja generiše random matricu. Napravljeno je par for petlji koje služe za testiranje 
-nekih funkcija na matricama koje su random generisane. Također u komentaru je napisano i 5
-izraza koji se mogu upisati da bi se testirala funkcionalnost operatora '>>'. Potrebno je 
-napomenuti da kod operatora '>>', kod unošenja inverzne matrice potrebno je napisati u obliku 
-„[1 2; 3 4] ^(-1)“.
-Minel Salihagić, 5930/M
-Strukture podataka i algoritmi, 17.1.2023.
+where `adjA` is the transpose of the matrix of algebraic complements, i.e., a matrix where each element is equal to the determinant of the matrix without the row and column containing that element. The function works in 𝑂(𝑛^3) time for an n x n matrix. The determinant calculation function is implemented using the Gaussian elimination method with pivoting, reducing the matrix to upper triangular form and operating in 𝑂(𝑛^3) time.
+
+Since some functions that are not declared as friends of the class need to check if the scalar is true or false, a getter for `scalar` is provided. Operators `==, !=, +=, -=, *=, /=, +, -, *, /, ^` are implemented to work even when one of the matrices is a scalar. The `^` operator follows the fast exponentiation algorithm. If the exponent is negative, the matrix is first inverted, the exponent is multiplied by -1, and then the operator is called on the inverted matrix with the positive exponent. If the exponent is 0, the identity matrix is returned; if it is greater than 0, the binary representation of the exponent is considered, i.e., the result during division by 2. If the number is divisible by 2, the matrix is multiplied by the base matrix (the matrix that was passed in), the exponent is divided by 2, and this continues until the exponent is greater than 0.
+
+Additionally, input and output operators for matrices are supported. The final function is `extractMatrix()`, an auxiliary function used in the `>>` operator, which extracts the matrix from the input stream when encountering a `[`. It is important to note that the input expression assumes that the `[` symbol marks the beginning of the matrix input, and an error will be raised if the matrix is not entered in the correct format.
+
+The `>>` operator works according to the "shunting yard" algorithm, similar to how the evaluator was implemented in exercises, with auxiliary functions to simplify the operator's implementation. In the `main` function, there are functions for generating random integers and doubles, as well as a function that generates a random matrix. Several `for` loops are created to test certain functions on randomly generated matrices. Additionally, 5 expressions that can be used to test the functionality of the `>>` operator are provided in comments. It is important to note that when using the `>>` operator for entering the inverse of a matrix, the input should be in the form `"[1 2; 3 4] ^(-1)"`.
+
+**Minel Salihagić, 5930/M**  
+*Data Structures and Algorithms, 17.01.2023.*
